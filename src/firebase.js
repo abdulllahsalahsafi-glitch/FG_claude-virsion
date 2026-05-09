@@ -11,12 +11,12 @@ import { getMessaging, isSupported } from "firebase/messaging";
 
 // 🔴 استبدل هذه القيم ببيانات مشروعك من Firebase Console
 const firebaseConfig = {
-  apiKey:            "YOUR_API_KEY",
-  authDomain:        "YOUR_PROJECT.firebaseapp.com",
-  projectId:         "YOUR_PROJECT_ID",
-  storageBucket:     "YOUR_PROJECT.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId:             "YOUR_APP_ID",
+  apiKey: "AIzaSyD-Bbu8-GvdfxzWdZCKI70tXPftcYkkkJM",
+  authDomain: "fifa-group.firebaseapp.com",
+  projectId: "fifa-group",
+  storageBucket: "fifa-group.firebasestorage.app",
+  messagingSenderId: "1063835143344",
+  appId: "1:1063835143344:web:6b37c2e4984f5800977f75"
 };
 
 // ── Initialize ────────────────────────────────────────────────
