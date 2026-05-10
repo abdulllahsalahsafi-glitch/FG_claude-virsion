@@ -5236,8 +5236,8 @@ export default function App() {
       <style>{moneyCss}</style>
       <style>{dealCss}</style>
       <style>{leagueAdminCss}</style>
-      <style>{v3OverrideCss}</style>   {/* ← هذا السطر فقط */}
-      
+      <style>{`:root{--cyan:${config.primaryColor};--blue:${config.secondaryColor};--violet:${config.accentColor};--fg-cover-height:${toCssSize(config.coverHeight, "118px")};--fg-cover-height-mobile:${toCssSize(config.coverHeightMobile, "50px")};}`}</style>
+
       <div className="bgOrb bgOrbOne" />
       <div className="bgOrb bgOrbTwo" />
 
@@ -8566,126 +8566,31 @@ function MembersPage(props) {
   }
 
   if (!selectedMember) {
-    const topThreeMembers = rankedMembers.slice(0, 3);
-    const leaderMember = topThreeMembers[0] || rankedMembers[0];
-    const membersTotalTrophies = rankedMembers.reduce(
-      (sum, member) => sum + totalForMember(member.id),
-      0
-    );
-    const totalPlayersCount = (props.allPlayers || []).length;
-    const getMemberRating = (member, index) => {
-      const trophiesCount = totalForMember(member.id);
-      const baseRating = 78 + Math.min(18, Math.floor(trophiesCount / 4));
-      const rankBoost = Math.max(0, 4 - index);
-      return Math.max(72, Math.min(99, baseRating + rankBoost));
-    };
-
     return (
-      <main className="utMembersPage">
-        <section className="utMembersHero">
-          <div className="utHeroText">
-            <span className="utEyebrow">FIFA GROUP • SEASON 06</span>
-            <h1>الأعضاء</h1>
-            <p>واجهة المشاركين الرسمية، مرتبة حسب البطولات وبأسلوب Ultimate Team.</p>
-          </div>
-          <div className="utHeroBall">⚽</div>
-        </section>
-
-        {leaderMember ? (
-          <section className="utLeaderCard" onClick={() => openMember(leaderMember.id)}>
-            <div className="utLeaderRank">#1</div>
-            <div className="utLeaderImageWrap">
-              <img src={leaderMember.avatar || avatar(leaderMember.name)} alt="" />
-            </div>
-            <div className="utLeaderInfo">
-              <span>المتصدر</span>
-              <h2>{leaderMember.name}</h2>
-              <p>{leaderMember.team || "بدون فريق"}</p>
-              <div className="utLogoStrip">
-                {leaderMember.nationallogo ? <img src={leaderMember.nationallogo} alt="" /> : null}
-                {leaderMember.teamlogo ? <img src={leaderMember.teamlogo} alt="" /> : null}
-              </div>
-            </div>
-            <div className="utLeaderRating">
-              <b>{getMemberRating(leaderMember, 0)}</b>
-              <small>GRP</small>
-            </div>
-          </section>
-        ) : null}
-
-        <section className="utQuickStats">
-          <div>
-            <b>{rankedMembers.length}</b>
-            <span>عضو</span>
-          </div>
-          <div>
-            <b>{membersTotalTrophies}</b>
-            <span>بطولة</span>
-          </div>
-          <div>
-            <b>{totalPlayersCount || "—"}</b>
-            <span>لاعب</span>
-          </div>
-        </section>
-
-        {topThreeMembers.length ? (
-          <section className="utPodium">
-            {topThreeMembers.map((member, index) => (
-              <button
-                key={`podium-${member.id || index}`}
-                className={`utPodiumCard rank${index + 1}`}
-                type="button"
-                onClick={() => openMember(member.id)}
-              >
-                <span className="utPodiumMedal">{index === 0 ? "👑" : index === 1 ? "🥈" : "🥉"}</span>
-                <img src={member.avatar || avatar(member.name)} alt="" />
+      <main className="membersHome glass">
+        <header className="pageHead membersHomeHead">
+          <h2>الأعضاء المشاركون</h2>
+          <p>
+            اختر العضو للدخول إلى البروفايل، البطولات، الإحصائيات، السجل المالي،
+            وقائمة اللاعبين.
+          </p>
+        </header>
+        <section className="seasonMembersGrid">
+          {rankedMembers.map((member, index) => (
+            <button
+              key={String(member.id || index)}
+              className="seasonMemberCard glassSoft"
+              onClick={() => openMember(member.id)}
+            >
+              <span className="seasonMemberRank">#{index + 1}</span>
+              <img src={member.avatar || avatar(member.name)} alt="" />
+              <div>
                 <b>{member.name}</b>
-                <small>{totalForMember(member.id)} 🏆</small>
-              </button>
-            ))}
-          </section>
-        ) : null}
-
-        <section className="utMembersBoard">
-          <div className="utBoardHead">
-            <div>
-              <span>MEMBERS</span>
-              <h2>قائمة المشاركين</h2>
-            </div>
-            <em>{rankedMembers.length} أعضاء</em>
-          </div>
-
-          <div className="utMembersRows">
-            {rankedMembers.map((member, index) => {
-              const trophiesCount = totalForMember(member.id);
-              const rating = getMemberRating(member, index);
-              return (
-                <button
-                  key={String(member.id || index)}
-                  className={`utMemberRow ${index === 0 ? "isLeader" : ""}`}
-                  type="button"
-                  onClick={() => openMember(member.id)}
-                >
-                  <span className="utRankPill">#{index + 1}</span>
-                  <div className="utMemberAvatar">
-                    <img src={member.avatar || avatar(member.name)} alt="" />
-                  </div>
-                  <div className="utMemberMeta">
-                    <b>{member.name}</b>
-                    <small>{member.team || "بدون فريق"}</small>
-                    <div className="utMemberLogos">
-                      {member.nationallogo ? <img src={member.nationallogo} alt="" /> : null}
-                      {member.teamlogo ? <img src={member.teamlogo} alt="" /> : null}
-                    </div>
-                  </div>
-                  <div className="utMemberNumbers">
-                    <span className="utRatingBadge">{rating}</span>
-                    <span className="utTrophyBadge">🏆 {trophiesCount}</span>
-                  </div>
-                </button>
-              );
-            })}
-          </div>
+                <small>{member.team || "بدون فريق"}</small>
+              </div>
+              <em>{renderSmartIcon(config.memberCardTrophyIcon)} {totalForMember(member.id)}</em>
+            </button>
+          ))}
         </section>
       </main>
     );
@@ -21068,18 +20973,4 @@ input:focus{
 @media(max-width:900px){.worldCupGroupsGrid{grid-template-columns:1fr}.worldCupRoadBracket .qualifierBracketRound{min-width:82vw!important;max-width:82vw!important}}
 @media(max-width:720px){.worldCupGroupsSection .sectionHead{align-items:stretch}.miniDownloadBtn{width:100%}}
 
-
-/* ===== ULTIMATE MEMBERS PAGE REAL LAYOUT PATCH ===== */
-.utMembersPage{display:grid!important;gap:16px!important;padding:6px 0 18px!important;background:transparent!important;border:0!important;box-shadow:none!important}
-.utMembersHero{position:relative!important;overflow:hidden!important;display:flex!important;align-items:center!important;justify-content:space-between!important;gap:14px!important;min-height:138px!important;border-radius:32px!important;padding:22px!important;background:radial-gradient(circle at 20% 0%,rgba(0,255,156,.24),transparent 35%),radial-gradient(circle at 100% 20%,rgba(0,229,255,.18),transparent 32%),linear-gradient(135deg,rgba(3,10,21,.94),rgba(12,16,36,.92))!important;border:1px solid rgba(0,255,156,.22)!important;box-shadow:0 22px 55px rgba(0,0,0,.48),inset 0 1px 0 rgba(255,255,255,.06)!important}
-.utMembersHero:before{content:"";position:absolute;inset:auto -40px -80px -40px;height:160px;background:radial-gradient(circle,rgba(0,229,255,.12),transparent 68%);pointer-events:none}
-.utHeroText{position:relative;z-index:1;text-align:right!important}.utEyebrow{display:block!important;color:#00ff9c!important;font-size:10px!important;font-weight:1000!important;letter-spacing:.34em!important;margin-bottom:8px!important}.utHeroText h1{font-size:44px!important;line-height:.95!important;margin:0 0 8px!important;color:#fff!important;text-shadow:0 0 24px rgba(0,229,255,.2)!important}.utHeroText p{margin:0!important;color:#a9b7cc!important;font-size:13px!important;font-weight:800!important;max-width:245px!important}.utHeroBall{position:relative;z-index:1;display:grid!important;place-items:center!important;width:58px!important;height:58px!important;border-radius:20px!important;background:linear-gradient(135deg,#00ff9c,#00e5ff,#2f8cff)!important;box-shadow:0 0 28px rgba(0,229,255,.35)!important;font-size:29px!important;color:#001018!important}
-.utLeaderCard{position:relative!important;overflow:hidden!important;border:1px solid rgba(250,204,21,.28)!important;border-radius:32px!important;background:radial-gradient(circle at 15% 0%,rgba(250,204,21,.18),transparent 32%),radial-gradient(circle at 92% 10%,rgba(0,229,255,.16),transparent 34%),linear-gradient(135deg,rgba(15,23,42,.92),rgba(3,7,18,.94))!important;box-shadow:0 24px 60px rgba(0,0,0,.55),0 0 28px rgba(250,204,21,.1)!important;padding:18px!important;display:grid!important;grid-template-columns:auto 1fr auto!important;align-items:center!important;gap:14px!important;text-align:right!important;min-height:132px!important;color:#fff!important}.utLeaderCard:after{content:"";position:absolute;inset:-40% auto auto -20%;width:210px;height:210px;border-radius:999px;border:1px solid rgba(250,204,21,.12);box-shadow:0 0 0 45px rgba(0,229,255,.025);pointer-events:none}.utLeaderRank{position:absolute!important;top:14px!important;left:14px!important;width:44px!important;height:44px!important;border-radius:16px!important;display:grid!important;place-items:center!important;background:rgba(250,204,21,.14)!important;border:1px solid rgba(250,204,21,.28)!important;color:#fde68a!important;font-weight:1000!important}.utLeaderImageWrap{width:84px!important;height:84px!important;border-radius:28px!important;padding:3px!important;background:linear-gradient(135deg,#facc15,#00e5ff)!important;box-shadow:0 0 30px rgba(0,229,255,.26)!important}.utLeaderImageWrap img{width:100%!important;height:100%!important;border-radius:25px!important;object-fit:cover!important}.utLeaderInfo span{display:block!important;color:#facc15!important;font-size:12px!important;font-weight:1000!important}.utLeaderInfo h2{font-size:31px!important;margin:2px 0 2px!important}.utLeaderInfo p{margin:0!important;color:#a7b4c8!important;font-size:15px!important;font-weight:900!important}.utLogoStrip{display:flex!important;gap:8px!important;margin-top:8px!important}.utLogoStrip img{width:24px!important;height:24px!important;border-radius:999px!important;object-fit:contain!important;background:rgba(255,255,255,.08)!important;padding:2px!important}.utLeaderRating{display:grid!important;place-items:center!important;width:62px!important;height:72px!important;border-radius:20px!important;background:linear-gradient(180deg,rgba(250,204,21,.22),rgba(250,204,21,.08))!important;border:1px solid rgba(250,204,21,.26)!important}.utLeaderRating b{font-size:30px!important;color:#fff!important;line-height:1!important}.utLeaderRating small{font-size:10px!important;color:#fde68a!important;font-weight:1000!important;letter-spacing:.08em!important}
-.utQuickStats{display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:10px!important}.utQuickStats div{min-height:74px!important;border-radius:24px!important;padding:12px!important;display:grid!important;place-items:center!important;background:linear-gradient(180deg,rgba(15,23,42,.74),rgba(2,6,23,.70))!important;border:1px solid rgba(0,229,255,.14)!important;box-shadow:0 12px 32px rgba(0,0,0,.32)!important}.utQuickStats b{font-size:24px!important;color:#00ff9c!important;line-height:1!important}.utQuickStats span{color:#94a3b8!important;font-size:12px!important;font-weight:900!important}
-.utPodium{display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:10px!important;align-items:end!important}.utPodiumCard{height:132px!important;border:1px solid rgba(148,163,184,.14)!important;border-radius:28px!important;background:linear-gradient(180deg,rgba(15,23,42,.82),rgba(2,6,23,.78))!important;padding:12px 8px!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:5px!important;color:#fff!important;box-shadow:0 16px 38px rgba(0,0,0,.38)!important}.utPodiumCard.rank1{height:154px!important;border-color:rgba(250,204,21,.42)!important;background:radial-gradient(circle at 50% 0%,rgba(250,204,21,.22),transparent 36%),linear-gradient(180deg,rgba(30,25,10,.90),rgba(2,6,23,.78))!important}.utPodiumCard img{width:54px!important;height:54px!important;border-radius:19px!important;object-fit:cover!important}.utPodiumCard b{font-size:14px!important;font-weight:1000!important;color:#fff!important;max-width:100%!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important}.utPodiumCard small{color:#cbd5e1!important;font-size:12px!important;font-weight:900!important}.utPodiumMedal{font-size:20px!important;line-height:1!important}
-.utMembersBoard{border-radius:32px!important;padding:16px!important;background:linear-gradient(180deg,rgba(15,23,42,.62),rgba(2,6,23,.52))!important;border:1px solid rgba(0,229,255,.14)!important;box-shadow:0 18px 46px rgba(0,0,0,.36)!important}.utBoardHead{display:flex!important;align-items:flex-end!important;justify-content:space-between!important;margin-bottom:14px!important}.utBoardHead span{display:block!important;font-size:10px!important;letter-spacing:.32em!important;color:#00ff9c!important;font-weight:1000!important}.utBoardHead h2{font-size:28px!important;margin:2px 0 0!important}.utBoardHead em{font-style:normal!important;color:#93c5fd!important;background:rgba(37,99,235,.13)!important;border:1px solid rgba(59,130,246,.22)!important;border-radius:999px!important;padding:6px 10px!important;font-weight:1000!important;font-size:12px!important}.utMembersRows{display:grid!important;gap:12px!important}.utMemberRow{position:relative!important;overflow:hidden!important;width:100%!important;min-height:94px!important;border-radius:28px!important;border:1px solid rgba(0,229,255,.12)!important;background:radial-gradient(circle at 92% 0%,rgba(0,255,156,.13),transparent 28%),linear-gradient(135deg,rgba(9,16,29,.92),rgba(5,9,19,.86))!important;box-shadow:0 14px 38px rgba(0,0,0,.38)!important;display:grid!important;grid-template-columns:auto auto 1fr auto!important;gap:12px!important;align-items:center!important;text-align:right!important;padding:12px 14px!important;color:#fff!important}.utMemberRow:before{content:"";position:absolute;right:0;top:20px;bottom:20px;width:5px;border-radius:999px;background:linear-gradient(#00ff9c,#00e5ff);box-shadow:0 0 18px rgba(0,255,156,.45)}.utMemberRow.isLeader{border-color:rgba(250,204,21,.38)!important;background:radial-gradient(circle at 90% 0%,rgba(250,204,21,.18),transparent 30%),linear-gradient(135deg,rgba(22,20,11,.94),rgba(5,9,19,.88))!important}.utRankPill{width:42px!important;height:42px!important;border-radius:15px!important;display:grid!important;place-items:center!important;background:rgba(15,23,42,.92)!important;border:1px solid rgba(148,163,184,.18)!important;color:#dbeafe!important;font-weight:1000!important}.utMemberAvatar{width:62px!important;height:62px!important;border-radius:22px!important;padding:2px!important;background:linear-gradient(135deg,rgba(0,255,156,.9),rgba(0,229,255,.75))!important;box-shadow:0 0 22px rgba(0,229,255,.20)!important}.utMemberAvatar img{width:100%!important;height:100%!important;border-radius:20px!important;object-fit:cover!important}.utMemberMeta b{display:block!important;color:#fff!important;font-size:21px!important;font-weight:1000!important;line-height:1.1!important}.utMemberMeta small{display:block!important;margin-top:4px!important;color:#94a3b8!important;font-weight:900!important;font-size:13px!important}.utMemberLogos{display:flex!important;gap:6px!important;margin-top:7px!important}.utMemberLogos img{width:22px!important;height:22px!important;border-radius:999px!important;object-fit:contain!important;background:rgba(255,255,255,.08)!important;padding:2px!important}.utMemberNumbers{display:grid!important;gap:7px!important;justify-items:center!important}.utRatingBadge{min-width:46px!important;height:40px!important;border-radius:15px!important;display:grid!important;place-items:center!important;background:linear-gradient(135deg,#facc15,#f59e0b)!important;color:#111827!important;font-size:18px!important;font-weight:1000!important}.utTrophyBadge{min-width:58px!important;height:34px!important;border-radius:999px!important;display:grid!important;place-items:center!important;background:linear-gradient(135deg,#00e5ff,#2f8cff)!important;color:#001018!important;font-weight:1000!important;font-size:14px!important}
-@media(max-width:430px){.utMembersPage{gap:14px!important}.utMembersHero{min-height:126px!important;border-radius:28px!important;padding:18px!important}.utHeroText h1{font-size:38px!important}.utHeroText p{font-size:12px!important;max-width:215px!important}.utHeroBall{width:52px!important;height:52px!important}.utLeaderCard{grid-template-columns:auto 1fr auto!important;padding:15px!important;border-radius:28px!important}.utLeaderImageWrap{width:72px!important;height:72px!important}.utLeaderInfo h2{font-size:27px!important}.utLeaderRating{width:56px!important;height:64px!important}.utLeaderRating b{font-size:26px!important}.utMemberRow{grid-template-columns:auto auto 1fr!important;min-height:92px!important}.utMemberNumbers{grid-column:1 / -1!important;display:flex!important;justify-content:flex-start!important;gap:8px!important;margin-right:54px!important}.utMemberMeta b{font-size:20px!important}.utPodiumCard{height:120px!important}.utPodiumCard.rank1{height:140px!important}.utPodiumCard img{width:48px!important;height:48px!important}}
-
 `;
-
-
