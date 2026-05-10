@@ -5237,7 +5237,8 @@ export default function App() {
       <style>{dealCss}</style>
       <style>{leagueAdminCss}</style>
       <style>{`:root{--cyan:${config.primaryColor};--blue:${config.secondaryColor};--violet:${config.accentColor};--fg-cover-height:${toCssSize(config.coverHeight, "118px")};--fg-cover-height-mobile:${toCssSize(config.coverHeightMobile, "50px")};}`}</style>
-
+      <style>{v3OverrideCss}</style>
+      
       <div className="bgOrb bgOrbOne" />
       <div className="bgOrb bgOrbTwo" />
 
