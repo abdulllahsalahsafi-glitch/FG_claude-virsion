@@ -1,3 +1,4 @@
+import { v3OverrideCss } from "./v3Override";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { auth, db } from "./firebase";
@@ -5235,8 +5236,8 @@ export default function App() {
       <style>{moneyCss}</style>
       <style>{dealCss}</style>
       <style>{leagueAdminCss}</style>
-      <style>{`:root{--cyan:${config.primaryColor};--blue:${config.secondaryColor};--violet:${config.accentColor};--fg-cover-height:${toCssSize(config.coverHeight, "118px")};--fg-cover-height-mobile:${toCssSize(config.coverHeightMobile, "50px")};}`}</style>
-
+      <style>{v3OverrideCss}</style>   {/* ← هذا السطر فقط */}
+      
       <div className="bgOrb bgOrbOne" />
       <div className="bgOrb bgOrbTwo" />
 
